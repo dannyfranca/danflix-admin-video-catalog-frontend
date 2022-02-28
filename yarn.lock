@@ -2321,6 +2321,11 @@
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.1.tgz#d8f1c0d0dc23afad6dc16a9e993a0865774b4065"
   integrity sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==
 
+"@types/route-parser@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@types/route-parser/-/route-parser-0.1.4.tgz#155686e569d19ff97779bf6bcb513360587748dd"
+  integrity sha512-lwH3SeyKwCAwP7oUoJNryPDdbW3Bx5lrB6mhV5iebqzOJHIut6wlaSxpQR4Lsk6j7wC08pGenr/xE8I/A4J3Fg==
+
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
@@ -8184,6 +8189,11 @@ rollup@^2.43.1:
   integrity sha512-XrMKOYK7oQcTio4wyTz466mucnd8LzkiZLozZ4Rz0zQD+HeX4nUK4B8GrTX/2EvN2/vBF/i2WnaXboPxo0JylA==
   optionalDependencies:
     fsevents "~2.3.2"
+
+route-parser@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/route-parser/-/route-parser-0.0.5.tgz#7d1d09d335e49094031ea16991a4a79b01bbe1f4"
+  integrity sha1-fR0J0zXkkJQDHqFpkaSnmwG74fQ=
 
 run-parallel@^1.1.9:
   version "1.2.0"
