@@ -4,6 +4,7 @@ import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import CircleIcon from "@mui/icons-material/Circle";
 import { useTranslation } from "react-i18next";
 
+import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "../../services/categories";
 
 const columns: MUIDataTableColumn[] = [
@@ -15,7 +16,7 @@ const columns: MUIDataTableColumn[] = [
     name: "is_active",
     label: "Active?",
     options: {
-      customBodyRender(value, tableMeta, updateValue) {
+      customBodyRender(value) {
         return value ? (
           <CircleIcon color="success" sx={{ transform: "scale(0.5)" }} />
         ) : (
@@ -27,6 +28,11 @@ const columns: MUIDataTableColumn[] = [
   {
     name: "created_at",
     label: "Created at",
+    options: {
+      customBodyRender(value) {
+        return <span>{formatDateFromIso(value)}</span>;
+      },
+    },
   },
 ];
 
