@@ -12,6 +12,6 @@ export default class HttpResource<T = any> {
   }
 
   create<I = T>(data: I) {
-    return this.http.post<I>(this.resource);
+    return this.http.post<I>(this.resource, data);
   }
 }
