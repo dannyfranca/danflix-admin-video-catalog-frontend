@@ -4,17 +4,18 @@ import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import CircleIcon from "@mui/icons-material/Circle";
 import { useTranslation } from "react-i18next";
 
+import i18next from "@/i18t";
 import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "../../services/categories";
 
 const columns: MUIDataTableColumn[] = [
   {
     name: "name",
-    label: "Name",
+    label: i18next.t("Name"),
   },
   {
     name: "is_active",
-    label: "Active?",
+    label: i18next.t("Active"),
     options: {
       customBodyRender(value) {
         return value ? (
@@ -27,7 +28,7 @@ const columns: MUIDataTableColumn[] = [
   },
   {
     name: "created_at",
-    label: "Created at",
+    label: i18next.t("Created at"),
     options: {
       customBodyRender(value) {
         return <span>{formatDateFromIso(value)}</span>;
