@@ -5,7 +5,7 @@ import routes from "./index";
 const AppRouter: React.FC = () => {
   return (
     <Switch>
-      {routes.map((route, key) => (
+      {routes.map((route) => (
         <Route
           key={route.name}
           path={route.path}

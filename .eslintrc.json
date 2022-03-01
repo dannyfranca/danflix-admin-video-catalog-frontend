@@ -25,6 +25,7 @@
     ],
     "rules": {
       "import/no-unresolved": "error",
+      "@typescript-eslint/no-explicit-any": "off",
       "import/extensions": "off",
       "react/jsx-filename-extension": "off",
       "react/function-component-definition": "off",

@@ -34,7 +34,7 @@ const Menu: React.FC = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         transformOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        {listRoutes.map((routeName, key) => {
+        {listRoutes.map((routeName) => {
           const route = menuRoutes.find((r) => r.name === routeName);
           return (
             <MenuItem
