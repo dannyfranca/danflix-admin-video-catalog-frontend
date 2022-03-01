@@ -4,6 +4,7 @@ import { RouteProps } from "react-router-dom";
 import PageList from "@/pages/category/PageList";
 import Dashboard from "@/pages/Dashboard";
 import i18next from "@/i18t";
+import PageForm from "@/pages/category/PageForm";
 
 interface AppRouteProps extends RouteProps {
   name: string;
@@ -31,7 +32,7 @@ const routes: AppRouteProps[] = [
     name: "categories.create",
     label: i18next.t("Create Category"),
     path: "/categories/create",
-    component: PageList,
+    component: PageForm,
     exact: true,
   },
   {
