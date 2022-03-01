@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import CircleIcon from "@mui/icons-material/Circle";
+import { useTranslation } from "react-i18next";
 
 import { listCategories } from "../../services/categories";
 
@@ -30,13 +31,14 @@ const columns: MUIDataTableColumn[] = [
 ];
 
 const Table: React.FC = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     listCategories().then(setData);
   }, []);
 
-  return <MUIDataTable title="Categorias" data={data} columns={columns} />;
+  return <MUIDataTable title={t("Categories")} data={data} columns={columns} />;
 };
 
 export default Table;

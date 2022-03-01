@@ -3,15 +3,19 @@ import { Box } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import Page from "../../components/Page";
+import { useTranslation } from "react-i18next";
+
+import Page from "@/components/Page";
 import Table from "./Table";
 
 const PageList: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
-    <Page title="Listagem de Categorias">
+    <Page title={t("Category List")}>
       <Box dir="rtl">
         <Fab
-          title="Adicionar categoria"
+          title={t("Add Category")}
           size="small"
           component={Link}
           to="category/create"

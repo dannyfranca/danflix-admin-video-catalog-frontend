@@ -1,7 +1,9 @@
 import { FunctionComponent } from "react";
 import { RouteProps } from "react-router-dom";
-import PageList from "../pages/category/PageList";
-import Dashboard from "../pages/Dashboard";
+
+import PageList from "@/pages/category/PageList";
+import Dashboard from "@/pages/Dashboard";
+import i18next from "@/i18t";
 
 interface AppRouteProps extends RouteProps {
   name: string;
@@ -13,28 +15,28 @@ interface AppRouteProps extends RouteProps {
 const routes: AppRouteProps[] = [
   {
     name: "dashboard",
-    label: "Dashboard",
+    label: i18next.t("Dashboard"),
     path: "/",
     component: Dashboard,
     exact: true,
   },
   {
     name: "categories.list",
-    label: "Lista de Categorias",
+    label: i18next.t("Category List"),
     path: "/categories",
     component: PageList,
     exact: true,
   },
   {
     name: "categories.create",
-    label: "Criar Categoria",
+    label: i18next.t("Create Category"),
     path: "/categories/create",
     component: PageList,
     exact: true,
   },
   {
     name: "categories.edit",
-    label: "Editar Categoria",
+    label: i18next.t("Edit Category"),
     path: "/categories/:id/edit",
     component: PageList,
     exact: true,
