@@ -16,9 +16,10 @@ const PageList: React.FC = () => {
       <Box dir="rtl">
         <Fab
           title={t("Add Category")}
+          color="secondary"
           size="small"
           component={Link}
-          to="category/create"
+          to="categories/create"
         >
           <AddIcon />
         </Fab>

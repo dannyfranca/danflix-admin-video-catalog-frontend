@@ -38,7 +38,7 @@ const Table: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    listCategories().then(setData);
+    listCategories().then((r) => setData(r.data));
   }, []);
 
   return <MUIDataTable title={t("Categories")} data={data} columns={columns} />;

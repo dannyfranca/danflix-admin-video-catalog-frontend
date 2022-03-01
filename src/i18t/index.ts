@@ -14,8 +14,11 @@ const resources: Resource = {
       "Create Category": "Create Category",
       "Edit Category": "Edit Category",
       Name: "Name",
+      Description: "Description",
       Active: "Active",
       "Created at": "Created at",
+      Save: "Save",
+      "Save and continue editing": "Save and continue editing",
     },
   },
   "pt-BR": {
@@ -27,8 +30,11 @@ const resources: Resource = {
       "Create Category": "Criar Categoria",
       "Edit Category": "Editar Categoria",
       Name: "Nome",
+      Description: "Descrição",
       Active: "Ativo",
       "Created at": "Criado em",
+      Save: "Salvar",
+      "Save and continue editing": "Salvar e continuar editando",
     },
   },
 };
