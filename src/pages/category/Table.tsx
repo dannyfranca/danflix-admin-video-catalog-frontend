@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import CircleIcon from "@mui/icons-material/Circle";
+
 import { listCategories } from "../../services/categories";
 
 const columns: MUIDataTableColumn[] = [
@@ -11,6 +13,15 @@ const columns: MUIDataTableColumn[] = [
   {
     name: "is_active",
     label: "Active?",
+    options: {
+      customBodyRender(value, tableMeta, updateValue) {
+        return value ? (
+          <CircleIcon color="success" sx={{ transform: "scale(0.5)" }} />
+        ) : (
+          <CircleIcon color="error" sx={{ transform: "scale(0.5)" }} />
+        );
+      },
+    },
   },
   {
     name: "created_at",
@@ -22,9 +33,7 @@ const Table: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    listCategories().then((v) => {
-      setData(v);
-    });
+    listCategories().then(setData);
   }, []);
 
   return <MUIDataTable title="Categorias" data={data} columns={columns} />;
