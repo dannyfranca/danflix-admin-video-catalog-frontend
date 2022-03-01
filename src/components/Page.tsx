@@ -1,17 +1,18 @@
-import { Container, Typography } from '@mui/material';
-import * as React from 'react';
+import * as React from "react";
+import { Container, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 
 type PageProps = {
-  title: string
-}
+  title: string;
+};
 
-const Page: React.FC<PageProps> = (props) => {
+const Page: React.FC<PageProps> = ({ title, children }) => {
   return (
     <Container>
-      <Typography sx={{color: '#999999'}} component='h1' variant='h5'>
-        {props.title}
+      <Typography sx={{ color: "#999999" }} component="h1" variant="h5">
+        {title}
       </Typography>
-      {props.children}
+      <Box paddingTop={1}>{children}</Box>
     </Container>
   );
 };
