@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
-import CircleIcon from "@mui/icons-material/Circle";
 import { useTranslation } from "react-i18next";
 
 import i18next from "@/i18t";
 import { formatDateFromIso } from "@/util/date";
-import { listCategories } from "../../services/categories";
+import { listCategories } from "@/services/categories";
+import { Circle } from "@/components/Circle";
 
 const columns: MUIDataTableColumn[] = [
   {
@@ -18,11 +18,7 @@ const columns: MUIDataTableColumn[] = [
     label: i18next.t("Active"),
     options: {
       customBodyRender(value) {
-        return value ? (
-          <CircleIcon color="success" sx={{ transform: "scale(0.5)" }} />
-        ) : (
-          <CircleIcon color="error" sx={{ transform: "scale(0.5)" }} />
-        );
+        return value ? <Circle color="success" /> : <Circle color="error" />;
       },
     },
   },
