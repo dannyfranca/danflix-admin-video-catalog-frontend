@@ -18,7 +18,7 @@ const columns: MUIDataTableColumn[] = [
     label: i18next.t("Active"),
     options: {
       customBodyRender(value) {
-        return value ? <Circle color="success" /> : <Circle color="error" />;
+        return <Circle color={value ? "success" : "error"} />;
       },
     },
   },
