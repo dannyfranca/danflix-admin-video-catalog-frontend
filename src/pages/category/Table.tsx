@@ -39,7 +39,7 @@ const Table: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    listCategories().then((r) => setData(r.data));
+    listCategories().then(({ data }) => setData(data));
   }, []);
 
   return (

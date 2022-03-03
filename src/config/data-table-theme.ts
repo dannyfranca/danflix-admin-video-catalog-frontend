@@ -9,8 +9,8 @@ export const dataTableTheme = createTheme({
         root: {
           backgroundColor: theme.palette!.background!.default,
         },
-        elevation1: {
-          backgroundColor: theme.palette!.background!.default,
+        elevation: {
+          backgroundColor: "rgba(0,0,0,0) !important",
           boxShadow: "none",
         },
       },

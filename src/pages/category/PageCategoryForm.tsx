@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Page from "@/components/Page";
 import Form from "./Form";
 
-const CategoryForm = () => {
+const PageCategoryForm = () => {
   const { id } = useParams<any>();
   return (
     <Page title={!id ? "Criar categoria" : "Editar categoria"}>
@@ -13,4 +13,4 @@ const CategoryForm = () => {
   );
 };
 
-export default CategoryForm;
+export default PageCategoryForm;
