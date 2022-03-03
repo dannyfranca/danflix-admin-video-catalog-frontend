@@ -14,4 +14,8 @@ export default class HttpResource<T = any> {
   create<I = T>(data: I) {
     return this.http.post<I>(this.resource, data);
   }
+
+  update<I = T>(id: string, data: I) {
+    return this.http.post<I>(`${this.resource}/${id}`, data);
+  }
 }
