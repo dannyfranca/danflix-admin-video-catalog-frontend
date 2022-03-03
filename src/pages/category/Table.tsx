@@ -36,7 +36,6 @@ const columns: MUIDataTableColumn[] = [
 ];
 
 const Table: React.FC = () => {
-  const { t } = useTranslation();
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {

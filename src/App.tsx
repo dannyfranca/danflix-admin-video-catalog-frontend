@@ -1,8 +1,8 @@
-import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import "./i18t";
+import { Box } from "@mui/system";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import Breadcrumbs from "./components/BreadCrumb";
