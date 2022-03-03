@@ -1,13 +1,17 @@
 import * as React from "react";
 import { IconButton, Menu as MuiMenu, MenuItem } from "@mui/material";
+import { Link } from "react-router-dom";
 
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { Link } from "react-router-dom";
-import routes from "../../routes";
+import routes, { AppRouteProps } from "@/routes";
 
 const Menu: React.FC = () => {
   const listRoutes = ["dashboard", "categories.list"];
   const menuRoutes = routes.filter((route) => listRoutes.includes(route.name));
+  const routeObject: { [k: string]: AppRouteProps } = {};
+  menuRoutes.forEach((v) => {
+    routeObject[v.name] = v;
+  });
   const [anchorElement, setAnchorElement] = React.useState(null);
   const open = Boolean(anchorElement);
 
@@ -35,7 +39,7 @@ const Menu: React.FC = () => {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
       >
         {listRoutes.map((routeName) => {
-          const route = menuRoutes.find((r) => r.name === routeName);
+          const route = routeObject[routeName];
           return (
             <MenuItem
               key={route?.name}

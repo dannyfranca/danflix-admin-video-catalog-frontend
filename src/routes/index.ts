@@ -6,7 +6,7 @@ import Dashboard from "@/pages/Dashboard";
 import i18next from "@/i18t";
 import PageForm from "@/pages/category/PageForm";
 
-interface AppRouteProps extends RouteProps {
+export interface AppRouteProps extends RouteProps {
   name: string;
   label: string;
   component: FunctionComponent;
