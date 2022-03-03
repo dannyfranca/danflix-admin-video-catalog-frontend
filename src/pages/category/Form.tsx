@@ -9,7 +9,6 @@ const Form: React.FC = () => {
   const { t } = useTranslation();
 
   const btnProps: ButtonProps = {
-    variant: "outlined",
     sx: {
       margin: theme.spacing(1),
     },
@@ -38,10 +37,14 @@ const Form: React.FC = () => {
       <Checkbox {...register("is_active")} />
       {t("Active")}
       <Box dir="rtl">
-        <Button {...btnProps} onClick={() => onSubmit(getValues())}>
+        <Button
+          {...btnProps}
+          variant="outlined"
+          onClick={() => onSubmit(getValues())}
+        >
           {t("Save and continue editing")}
         </Button>
-        <Button {...btnProps} type="submit">
+        <Button {...btnProps} variant="contained" type="submit">
           {t("Save")}
         </Button>
       </Box>

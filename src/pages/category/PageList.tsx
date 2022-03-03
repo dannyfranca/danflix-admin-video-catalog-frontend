@@ -13,10 +13,10 @@ const PageList: React.FC = () => {
 
   return (
     <Page title={t("Category List")}>
-      <Box dir="rtl">
+      <Box dir="rtl" py={2}>
         <Fab
           title={t("Add Category")}
-          color="secondary"
+          color="primary"
           size="small"
           component={Link}
           to="categories/create"

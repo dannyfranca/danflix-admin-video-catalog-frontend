@@ -7,6 +7,7 @@ import RouteParser from "route-parser";
 import { Link as RouterLink, Route, useLocation } from "react-router-dom";
 
 import { Container } from "@mui/material";
+import { theme } from "@/config/theme";
 import routes from "../routes";
 
 const breadcrumbNameMap: { [key: string]: string } = {};
@@ -54,9 +55,9 @@ const BreadCrumbsContent: React.FC = () => {
             to={to}
             key={to}
             sx={{
-              color: "#4db5ab",
-              "&:focus, &:active": { color: "#4db5ab" },
-              "&:hover": { color: "#055a52" },
+              color: theme.palette.primary.main,
+              "&:focus, &:active": { color: theme.palette.primary.main },
+              "&:hover": { color: theme.palette.primary.dark },
             }}
           >
             {breadcrumbNameMap[route]}

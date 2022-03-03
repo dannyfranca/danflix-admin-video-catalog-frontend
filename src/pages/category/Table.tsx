@@ -2,11 +2,13 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import { useTranslation } from "react-i18next";
+import { ThemeProvider } from "@mui/material";
 
 import i18next from "@/i18t";
 import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "@/services/categories";
 import { Circle } from "@/components/Circle";
+import { dataTableTheme } from "@/config/data-table-theme";
 
 const columns: MUIDataTableColumn[] = [
   {
@@ -41,7 +43,16 @@ const Table: React.FC = () => {
     listCategories().then((r) => setData(r.data));
   }, []);
 
-  return <MUIDataTable title={t("Categories")} data={data} columns={columns} />;
+  return (
+    <ThemeProvider theme={dataTableTheme}>
+      <MUIDataTable
+        title=""
+        data={data}
+        columns={columns}
+        options={{ elevation: 0 }}
+      />
+    </ThemeProvider>
+  );
 };
 
 export default Table;
