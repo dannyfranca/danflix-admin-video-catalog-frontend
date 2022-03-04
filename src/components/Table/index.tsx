@@ -66,7 +66,7 @@ const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
     columns.forEach((c, k) => {
       if (c.width && theme.components?.MuiTableCell?.styleOverrides?.head)
         theme.components.MuiTableCell.styleOverrides.head[
-          `&:nth-child(${k + 2})`
+          `&:nth-of-type(${k + 2})`
         ] = {
           width: c.width,
         };
