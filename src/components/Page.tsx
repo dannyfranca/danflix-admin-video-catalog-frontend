@@ -9,10 +9,15 @@ type PageProps = {
 const Page: React.FC<PageProps> = ({ title, children }) => {
   return (
     <Container>
-      <Typography sx={{ color: "#999999" }} component="h1" variant="h5">
+      <Typography
+        sx={{ color: "#999999" }}
+        component="h1"
+        variant="h5"
+        paddingTop={2}
+      >
         {title}
       </Typography>
-      <Box paddingTop={1}>{children}</Box>
+      <Box paddingTop={2}>{children}</Box>
     </Container>
   );
 };
