@@ -2,26 +2,19 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router-dom";
-import {
-  Box,
-  Button,
-  ButtonProps,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-} from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnackbar } from "notistack";
 
 import * as yup from "@/util/vendor/yup";
-import { theme } from "@/config/theme";
 import {
   createCategory,
   getCategory,
   updateCategory,
 } from "@/services/categories";
 import { Category } from "@/util/models";
+import { SubmitActions } from "./SubmitActions";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required().max(70),
@@ -36,6 +29,7 @@ const Form: React.FC = () => {
     getValues,
     reset,
     watch,
+    trigger,
     formState: { errors },
   } = useForm<Category>({
     resolver: yupResolver(validationSchema),
@@ -49,13 +43,6 @@ const Form: React.FC = () => {
   const { id } = useParams<any>();
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const btnProps: ButtonProps = {
-    sx: {
-      margin: theme.spacing(1),
-    },
-    disabled: loading,
-  };
 
   useEffect(() => {
     if (!id) return;
@@ -120,19 +107,12 @@ const Form: React.FC = () => {
         labelPlacement="end"
         disabled={loading}
       />
-
-      <Box dir="rtl">
-        <Button
-          {...btnProps}
-          variant="outlined"
-          onClick={() => onSubmit(getValues())}
-        >
-          {t("Save and continue editing")}
-        </Button>
-        <Button {...btnProps} variant="contained" type="submit">
-          {t("Save")}
-        </Button>
-      </Box>
+      <SubmitActions
+        disabled={loading}
+        handleSave={async () => {
+          if (await trigger()) onSubmit(getValues());
+        }}
+      />
     </form>
   );
 };
