@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { MUIDataTableColumn } from "mui-datatables";
 import { ThemeProvider } from "@mui/material";
 
 import i18next from "@/i18t";
@@ -41,6 +40,10 @@ const columns: DataTableColumn[] = [
         return <span>{formatDateFromIso(value)}</span>;
       },
     },
+  },
+  {
+    name: "actions",
+    label: i18next.t("Actions"),
   },
 ];
 

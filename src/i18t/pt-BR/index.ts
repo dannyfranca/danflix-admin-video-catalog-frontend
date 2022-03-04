@@ -29,4 +29,5 @@ export const ptBrTranslations: { [k: string]: string } = {
   "row(s) selected": "registros(s) selecionados",
   Delete: "Deletar",
   "Delete selected columns": "Deletar colunas selecionadas",
+  Actions: "Ações",
 };

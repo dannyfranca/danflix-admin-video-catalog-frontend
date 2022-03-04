@@ -29,4 +29,5 @@ export const enTranslations: { [k: string]: string } = {
   "row(s) selected": "row(s) selected",
   Delete: "Delete",
   "Delete selected columns": "Delete selected columns",
+  Actions: "Actions",
 };
