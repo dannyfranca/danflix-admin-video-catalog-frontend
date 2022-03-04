@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import { MUIDataTableColumn } from "mui-datatables";
 import { ThemeProvider } from "@mui/material";
 
 import i18next from "@/i18t";
@@ -8,6 +8,8 @@ import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "@/services/categories";
 import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
+import DataTable from "@/components/Table";
+import { Category } from "@/util/models";
 
 const columns: MUIDataTableColumn[] = [
   {
@@ -35,7 +37,7 @@ const columns: MUIDataTableColumn[] = [
 ];
 
 const Table: React.FC = () => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Category[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,7 +49,7 @@ const Table: React.FC = () => {
 
   return (
     <ThemeProvider theme={dataTableTheme}>
-      <MUIDataTable
+      <DataTable
         title=""
         data={data}
         columns={columns}
