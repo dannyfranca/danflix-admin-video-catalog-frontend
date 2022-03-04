@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnackbar } from "notistack";
 
 import * as yup from "@/util/vendor/yup";
 import { theme } from "@/config/theme";
@@ -33,7 +34,6 @@ const Form: React.FC = () => {
     register,
     handleSubmit,
     getValues,
-    setValue,
     reset,
     watch,
     formState: { errors },
@@ -44,6 +44,7 @@ const Form: React.FC = () => {
     },
   });
 
+  const snackbar = useSnackbar();
   const history = useHistory();
   const { id } = useParams<any>();
   const [category, setCategory] = useState<Category | null>(null);
@@ -73,9 +74,18 @@ const Form: React.FC = () => {
 
     return request
       .then(({ data }) => {
+        snackbar.enqueueSnackbar("Categoria salva com sucesso", {
+          variant: "success",
+        });
         setTimeout(() => {
           if (event) history.push("/categories");
           else if (!id) history.push(`/categories/${data?.id}/edit`);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        snackbar.enqueueSnackbar(error.message, {
+          variant: "error",
         });
       })
       .finally(() => setLoading(false));

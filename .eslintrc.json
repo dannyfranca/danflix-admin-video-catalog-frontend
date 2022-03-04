@@ -24,6 +24,7 @@
       "prettier"
     ],
     "rules": {
+      "prettier/prettier": ["error", { "endOfLine": "auto" }],
       "import/no-unresolved": "error",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
@@ -32,12 +33,14 @@
       "react/function-component-definition": "off",
       "react/require-default-props": "off",
       "react/jsx-props-no-spreading": "off",
+      "react/no-unstable-nested-components": "off",
       "import/prefer-default-export": "off",
       "no-useless-constructor": "off",
       "no-shadow": "off",
       "no-param-reassign": "off",
       "no-promise-executor-return": "off",
       "no-unused-expressions": "off",
+      "no-return-assign": "off",
       "import/no-extraneous-dependencies": "off"
     },
     "settings": {
