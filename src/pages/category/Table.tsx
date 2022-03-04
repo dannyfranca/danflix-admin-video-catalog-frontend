@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { ThemeProvider } from "@mui/material";
+import { IconButton, ThemeProvider } from "@mui/material";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 import i18next from "@/i18t";
 import { formatDateFromIso } from "@/util/date";
@@ -9,8 +11,8 @@ import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
 import DataTable, { DataTableColumn } from "@/components/Table";
 import { Category } from "@/util/models";
-import { useSnackbar } from "notistack";
-import { useTranslation } from "react-i18next";
+import EditIcon from "@mui/icons-material/Edit";
+import { Link } from "react-router-dom";
 
 const columns: DataTableColumn[] = [
   {
@@ -46,6 +48,19 @@ const columns: DataTableColumn[] = [
   {
     name: "actions",
     label: i18next.t("Actions"),
+    options: {
+      customBodyRender: (value, tableMeta) => {
+        return (
+          <IconButton
+            color="primary"
+            component={Link}
+            to={`/categories/${tableMeta.rowData[0]}/edit`}
+          >
+            <EditIcon />
+          </IconButton>
+        );
+      },
+    },
   },
 ];
 
