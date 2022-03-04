@@ -34,6 +34,7 @@
       "react/require-default-props": "off",
       "react/jsx-props-no-spreading": "off",
       "react/no-unstable-nested-components": "off",
+      "react/destructuring-assignment": "off",
       "import/prefer-default-export": "off",
       "no-useless-constructor": "off",
       "no-shadow": "off",

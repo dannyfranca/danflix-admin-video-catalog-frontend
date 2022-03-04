@@ -8,17 +8,24 @@ import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "@/services/categories";
 import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
-import DataTable from "@/components/Table";
+import DataTable, { DataTableColumn } from "@/components/Table";
 import { Category } from "@/util/models";
 
-const columns: MUIDataTableColumn[] = [
+const columns: DataTableColumn[] = [
+  {
+    name: "id",
+    label: "ID",
+    width: "30%",
+  },
   {
     name: "name",
     label: i18next.t("Name"),
+    width: "35%",
   },
   {
     name: "is_active",
     label: i18next.t("Active"),
+    width: "4%",
     options: {
       customBodyRender(value) {
         return <Circle color={value ? "success" : "error"} />;
@@ -28,6 +35,7 @@ const columns: MUIDataTableColumn[] = [
   {
     name: "created_at",
     label: i18next.t("Created at"),
+    width: "14%",
     options: {
       customBodyRender(value) {
         return <span>{formatDateFromIso(value)}</span>;

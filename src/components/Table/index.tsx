@@ -2,9 +2,15 @@ import * as React from "react";
 import MUIDataTable, {
   MUIDataTableOptions,
   MUIDataTableProps,
+  MUIDataTableColumn,
 } from "mui-datatables";
 import i18n from "i18next";
-import { merge } from "lodash";
+import { cloneDeep, merge, omit } from "lodash";
+import { Theme, ThemeProvider, useTheme } from "@mui/material";
+
+export interface DataTableColumn extends MUIDataTableColumn {
+  width?: string;
+}
 
 const defaultMuiTableOptions: MUIDataTableOptions = {
   print: false,
@@ -44,14 +50,44 @@ const defaultMuiTableOptions: MUIDataTableOptions = {
   },
 };
 
-type AppTableProps = MUIDataTableProps;
+interface AppTableProps extends MUIDataTableProps {
+  columns: DataTableColumn[];
+}
 
 const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
-  const newProps = merge<Partial<MUIDataTableProps>, AppTableProps>(
-    { options: defaultMuiTableOptions },
-    props
+  const theme = cloneDeep<Theme>(useTheme());
+
+  const setColumnWidth = (columns: DataTableColumn[]) => {
+    columns.forEach((c, k) => {
+      if (c.width && theme.components?.MuiTableCell?.styleOverrides?.head)
+        theme.components.MuiTableCell.styleOverrides.head[
+          `&:nth-child(${k + 2})`
+        ] = {
+          width: c.width,
+        };
+    });
+  };
+
+  const extractMuiDataTableColumns = (
+    columns: DataTableColumn[]
+  ): MUIDataTableColumn[] => {
+    setColumnWidth(columns);
+    return columns.map((c) => omit(c, "width"));
+  };
+
+  const newProps = merge<
+    Partial<MUIDataTableProps>,
+    AppTableProps,
+    Partial<MUIDataTableProps>
+  >({ options: defaultMuiTableOptions }, props, {
+    columns: extractMuiDataTableColumns(props.columns),
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <MUIDataTable {...newProps} />
+    </ThemeProvider>
   );
-  return <MUIDataTable {...newProps} />;
 };
 
 export default DataTable;
