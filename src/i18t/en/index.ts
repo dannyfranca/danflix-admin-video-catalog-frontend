@@ -11,6 +11,9 @@ export const enTranslations: { [k: string]: string } = {
   "Created at": "Created at",
   Save: "Save",
   "Save and continue editing": "Save and continue editing",
+  // CATEGORY
+  "Category saved with success": "Category saved with success",
+  // DATA TABLE
   "No match records found": "No match records found",
   Sort: "Sort",
   "Next page": "Next page",
@@ -30,4 +33,6 @@ export const enTranslations: { [k: string]: string } = {
   Delete: "Delete",
   "Delete selected columns": "Delete selected columns",
   Actions: "Actions",
+  Loading: "Loading",
+  "Unable to load data": "Não foi possível carregar as informações",
 };

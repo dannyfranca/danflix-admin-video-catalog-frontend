@@ -61,7 +61,7 @@ const Form: React.FC = () => {
 
     return request
       .then(({ data }) => {
-        snackbar.enqueueSnackbar("Categoria salva com sucesso", {
+        snackbar.enqueueSnackbar(t("Category saved with success"), {
           variant: "success",
         });
         setTimeout(() => {
@@ -71,7 +71,7 @@ const Form: React.FC = () => {
       })
       .catch((error) => {
         console.log(error);
-        snackbar.enqueueSnackbar(error.message, {
+        snackbar.enqueueSnackbar(t(error.message), {
           variant: "error",
         });
       })

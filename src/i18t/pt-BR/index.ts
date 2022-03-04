@@ -11,6 +11,9 @@ export const ptBrTranslations: { [k: string]: string } = {
   "Created at": "Criado em",
   Save: "Salvar",
   "Save and continue editing": "Salvar e continuar editando",
+  // CATEGORY
+  "Category saved with success": "Categoria salva com sucesso",
+  // DATA TABLE
   "No match records found": "Nenhum registro encontrado",
   Sort: "Classificar",
   "Next page": "Próxima página",
@@ -30,4 +33,6 @@ export const ptBrTranslations: { [k: string]: string } = {
   Delete: "Deletar",
   "Delete selected columns": "Deletar colunas selecionadas",
   Actions: "Ações",
+  Loading: "Carregando",
+  "Unable to load data": "Não foi possível carregar as informações",
 };
