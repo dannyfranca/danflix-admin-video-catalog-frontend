@@ -42,6 +42,7 @@
       "no-promise-executor-return": "off",
       "no-unused-expressions": "off",
       "no-return-assign": "off",
+      "no-use-before-define": "off",
       "import/no-extraneous-dependencies": "off"
     },
     "settings": {

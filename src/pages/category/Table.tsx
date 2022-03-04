@@ -9,6 +9,8 @@ import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
 import DataTable, { DataTableColumn } from "@/components/Table";
 import { Category } from "@/util/models";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 const columns: DataTableColumn[] = [
   {
@@ -48,11 +50,25 @@ const columns: DataTableColumn[] = [
 ];
 
 const Table: React.FC = () => {
+  const { t } = useTranslation();
+  const snackbar = useSnackbar();
   const [data, setData] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    listCategories().then(({ data }) => isMounted && setData(data));
+    setLoading(true);
+    listCategories()
+      .then(({ data }) => isMounted && setData(data))
+      .catch((error) => {
+        console.error(error);
+        snackbar.enqueueSnackbar(t("Unable to load data"), {
+          variant: "error",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     return () => {
       isMounted = false;
     };
@@ -65,6 +81,7 @@ const Table: React.FC = () => {
         data={data}
         columns={columns}
         options={{ elevation: 0 }}
+        loading={loading}
       />
     </ThemeProvider>
   );

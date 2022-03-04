@@ -52,6 +52,7 @@ const defaultMuiTableOptions: MUIDataTableOptions = {
 
 interface AppTableProps extends MUIDataTableProps {
   columns: DataTableColumn[];
+  loading?: boolean;
 }
 
 const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
@@ -75,17 +76,34 @@ const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
     return columns.map((c) => omit(c, "width"));
   };
 
+  const applyLoading = () => {
+    const textLabels = newProps.options?.textLabels;
+    if (!textLabels?.body) return;
+    textLabels.body.noMatch =
+      newProps.loading === true
+        ? `${i18n.t("Loading")}...`
+        : textLabels.body.noMatch;
+  };
+
+  const getOriginalMuiDataTableProps = () => {
+    return omit(newProps, "isLoading");
+  };
+
   const newProps = merge<
     Partial<MUIDataTableProps>,
     AppTableProps,
     Partial<MUIDataTableProps>
-  >({ options: defaultMuiTableOptions }, props, {
+  >({ options: cloneDeep(defaultMuiTableOptions) }, props, {
     columns: extractMuiDataTableColumns(props.columns),
   });
 
+  applyLoading();
+
+  const originalProps = getOriginalMuiDataTableProps();
+
   return (
     <ThemeProvider theme={theme}>
-      <MUIDataTable {...newProps} />
+      <MUIDataTable {...originalProps} />
     </ThemeProvider>
   );
 };
