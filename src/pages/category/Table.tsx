@@ -76,13 +76,7 @@ const Table: React.FC = () => {
 
   return (
     <ThemeProvider theme={dataTableTheme}>
-      <DataTable
-        title=""
-        data={data}
-        columns={columns}
-        options={{ elevation: 0 }}
-        loading={loading}
-      />
+      <DataTable title="" data={data} columns={columns} loading={loading} />
     </ThemeProvider>
   );
 };

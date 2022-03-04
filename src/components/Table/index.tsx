@@ -15,6 +15,10 @@ export interface DataTableColumn extends MUIDataTableColumn {
 const defaultMuiTableOptions: MUIDataTableOptions = {
   print: false,
   download: false,
+  elevation: 0,
+  responsive: "standard",
+  fixedHeader: true,
+  tableBodyMaxHeight: "500px",
   textLabels: {
     body: {
       noMatch: i18n.t("No match records found"),

@@ -13,11 +13,11 @@ const Page: React.FC<PageProps> = ({ title, children }) => {
         sx={{ color: "#999999" }}
         component="h1"
         variant="h5"
-        paddingTop={2}
+        paddingTop={1}
       >
         {title}
       </Typography>
-      <Box paddingTop={2}>{children}</Box>
+      <Box>{children}</Box>
     </Container>
   );
 };

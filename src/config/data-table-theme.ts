@@ -20,13 +20,6 @@ export const dataTableTheme = createTheme({
         },
       },
     },
-    MuiTableRow: {
-      styleOverrides: {
-        head: {
-          backgroundColor: `${theme.palette!.primary!.main}!important`,
-        },
-      },
-    },
     MuiTable: {
       styleOverrides: {
         root: {
@@ -44,8 +37,7 @@ export const dataTableTheme = createTheme({
         head: {
           paddingTop: 0,
           paddingBottom: 0,
-          backgroundColor: (theme.palette!.primary as SimplePaletteColorOptions)
-            .main,
+          backgroundColor: `${theme.palette!.primary!.main}!important`,
           " div,span,path": {
             color: "#ffffff",
           },
