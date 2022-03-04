@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
-import { useTranslation } from "react-i18next";
 import { ThemeProvider } from "@mui/material";
 
 import i18next from "@/i18t";
@@ -39,7 +38,11 @@ const Table: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    listCategories().then(({ data }) => setData(data));
+    let isMounted = true;
+    listCategories().then(({ data }) => isMounted && setData(data));
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
