@@ -13,7 +13,9 @@ export interface DataTableColumn extends MUIDataTableColumn {
   width?: string;
 }
 
-const defaultMuiTableOptions: MUIDataTableOptions = {
+const makeDefaultMuiTableOptions: (
+  debouncedSearchTime?: number
+) => MUIDataTableOptions = (debouncedSearchTime) => ({
   print: false,
   download: false,
   elevation: 0,
@@ -59,13 +61,15 @@ const defaultMuiTableOptions: MUIDataTableOptions = {
       onSearch={onSearch}
       onHide={onHide}
       options={options}
+      debouncedTime={debouncedSearchTime}
     />
   ),
-};
+});
 
 interface AppTableProps extends MUIDataTableProps {
   columns: DataTableColumn[];
   loading?: boolean;
+  debouncedSearchTime?: number;
 }
 
 const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
@@ -106,7 +110,7 @@ const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
     Partial<MUIDataTableProps>,
     AppTableProps,
     Partial<MUIDataTableProps>
-  >({ options: cloneDeep(defaultMuiTableOptions) }, props, {
+  >({ options: makeDefaultMuiTableOptions(props.debouncedSearchTime) }, props, {
     columns: extractMuiDataTableColumns(props.columns),
   });
 

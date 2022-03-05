@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grow from "@mui/material/Grow";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { makeStyles } from "tss-react/mui";
-import { debounce, isObject, isString, isUndefined } from "lodash";
+import { isString } from "lodash";
 
 interface TableSearchProps {
   searchText: string | { value: string };
   onSearch: (text: string) => void;
   onHide: () => void;
+  debouncedTime?: number;
   options: any;
 }
 
@@ -44,10 +45,9 @@ const DebouncedTableSearch: React.FC<TableSearchProps> = ({
   const [state, setState] = useState({ text: searchText });
 
   let textValue: string;
-  if (searchText && isObject(searchText) && !isUndefined(searchText.value))
-    textValue = searchText.value;
-  else if (isString(searchText)) textValue = searchText;
-  else textValue = "";
+  if (searchText && (searchText as any).value !== undefined)
+    textValue = (searchText as any).value;
+  else textValue = searchText as string;
 
   const handleTextChange = (event) => {
     setState({
