@@ -75,6 +75,7 @@ const Table: React.FC = () => {
   const mounted = useRef(true);
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [searchObject, dispatchSearchObject] = useReducer(
     reducer,
     INITIAL_STATE
@@ -94,6 +95,7 @@ const Table: React.FC = () => {
       .then(({ data, meta }) => {
         if (!mounted.current) return;
         setData(data);
+        setTotalRecords(meta?.total);
         // setSearchObject((prevState) => ({ ...prevState, total: meta?.total }));
       })
       .catch((error) => {
@@ -150,7 +152,7 @@ const Table: React.FC = () => {
           searchText: searchObject.search as any,
           page: searchObject.page,
           rowsPerPage: searchObject.page_size,
-          count: searchObject.total,
+          count: totalRecords,
           customToolbar: () => (
             <FilterResetButton
               handleClick={() => dispatchSearchObject(Creators.setReset())}
