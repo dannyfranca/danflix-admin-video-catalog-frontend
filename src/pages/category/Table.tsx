@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useReducer } from "react";
+import { Link } from "react-router-dom";
 import { IconButton, ThemeProvider } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
@@ -9,12 +10,11 @@ import { listCategories } from "@/services/categories";
 import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
 import DataTable, { DataTableColumn } from "@/components/Table";
-import { Category, SearchState } from "@/util/models";
+import { Category } from "@/util/models";
 import EditIcon from "@mui/icons-material/Edit";
-import { Link } from "react-router-dom";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
-import { clone } from "lodash";
+import reducer, { INITIAL_STATE, Creators } from "@/store/search";
 
 const columns: DataTableColumn[] = [
   {
@@ -69,45 +69,6 @@ const columns: DataTableColumn[] = [
   },
 ];
 
-const INITIAL_SEARCH_OBJECT: SearchState = {
-  search: "",
-  total: 0,
-  page: 1,
-  page_size: 10,
-  sort_by: null,
-  sort_dir: null,
-};
-
-const reducer = (
-  state: SearchState,
-  action: { [k: string]: any }
-): SearchState => {
-  switch (action.type) {
-    case "search":
-      return {
-        ...state,
-        search: action.search ?? "",
-        page: 1,
-      };
-    case "page":
-      return { ...state, page: action.page };
-    case "page_size":
-      return {
-        ...state,
-        page_size: action.page_size,
-      };
-    case "order":
-      return {
-        ...state,
-        sort_by: action.sort_by,
-        sort_dir: action.sort_dir ?? null,
-      };
-    case "reset":
-    default:
-      return clone(INITIAL_SEARCH_OBJECT);
-  }
-};
-
 const Table: React.FC = () => {
   const { t } = useTranslation();
   const snackbar = useSnackbar();
@@ -116,7 +77,7 @@ const Table: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [searchObject, dispatchSearchObject] = useReducer(
     reducer,
-    INITIAL_SEARCH_OBJECT
+    INITIAL_STATE
   );
   // const [searchObject, setSearchObject] =
   //   useState<SearchState>(INITIAL_SEARCH_OBJECT);
@@ -186,27 +147,28 @@ const Table: React.FC = () => {
         loading={loading}
         options={{
           serverSide: true,
-          searchText: searchObject.search,
+          searchText: searchObject.search as any,
           page: searchObject.page,
           rowsPerPage: searchObject.page_size,
           count: searchObject.total,
           customToolbar: () => (
             <FilterResetButton
-              handleClick={() => dispatchSearchObject({ type: "reset" })}
+              handleClick={() => dispatchSearchObject(Creators.setReset())}
             />
           ),
           onSearchChange: (value) =>
-            dispatchSearchObject({ type: "search", search: value }),
+            dispatchSearchObject(Creators.setSearch({ search: value ?? "" })),
           onChangePage: (page) =>
-            dispatchSearchObject({ type: "page", page: page + 1 }),
+            dispatchSearchObject(Creators.setPage({ page: page + 1 })),
           onChangeRowsPerPage: (pageSize) =>
-            dispatchSearchObject({ type: "page_size", page_size: pageSize }),
+            dispatchSearchObject(Creators.setPageSize({ page_size: pageSize })),
           onColumnSortChange: (changedColumn, sortDirection) =>
-            dispatchSearchObject({
-              type: "order",
-              sort_by: changedColumn,
-              sort_dir: sortDirection,
-            }),
+            dispatchSearchObject(
+              Creators.setOrder({
+                sort_by: changedColumn,
+                sort_dir: sortDirection,
+              })
+            ),
         }}
       />
     </ThemeProvider>

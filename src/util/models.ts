@@ -1,18 +1,3 @@
-export interface Pagination {
-  page: number;
-  page_size: number;
-  total: number;
-}
-
-export interface Sort {
-  sort_by: string | null;
-  sort_dir: "asc" | "desc" | null;
-}
-
-export interface SearchState extends Pagination, Sort {
-  search: string;
-}
-
 export interface ListResponse<T> {
   data: T[];
   links: {
