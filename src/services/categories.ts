@@ -20,9 +20,9 @@ export const getCategory: GetService<Category> = async (id) => {
   return categoryHttp.get(id);
 };
 
-export const listCategories: ListService<Category> = async () => {
+export const listCategories: ListService<Category> = async (options) => {
   if (useMockData) return makeListMock(categoriesMock)();
-  return categoryHttp.list();
+  return categoryHttp.list(options);
 };
 
 export const createCategory: CreateService<Category> = async (data) => {

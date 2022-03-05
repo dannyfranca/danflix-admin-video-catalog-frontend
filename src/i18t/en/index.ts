@@ -35,4 +35,5 @@ export const enTranslations: { [k: string]: string } = {
   Actions: "Actions",
   Loading: "Loading",
   "Unable to load data": "Não foi possível carregar as informações",
+  "Clear search": "Clear search",
 };

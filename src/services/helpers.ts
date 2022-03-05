@@ -1,5 +1,6 @@
-export interface ServiceResponse<T = any> {
+export interface ServiceResponse<T = any, M = any> {
   data: T;
+  meta?: M;
 }
 
 export interface BaseMockData {
@@ -11,9 +12,9 @@ export type GetService<T extends BaseMockData> = (
   id: string
 ) => Promise<ServiceResponse<T | null>>;
 
-export type ListService<T extends BaseMockData> = () => Promise<
-  ServiceResponse<T[]>
->;
+export type ListService<T extends BaseMockData> = (options?: {
+  [k: string]: any;
+}) => Promise<ServiceResponse<T[]>>;
 
 export type CreateService<T extends BaseMockData> = (
   data: T

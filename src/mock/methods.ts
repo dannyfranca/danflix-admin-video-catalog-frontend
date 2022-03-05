@@ -8,8 +8,12 @@ const sleep = (ms: number) =>
     }, ms)
   );
 
-export const makeMockServiceResponse = <T = any>(data: T): ServiceResponse => ({
+export const makeMockServiceResponse = <T = any>(
+  data: T,
+  meta?: any
+): ServiceResponse => ({
   data,
+  meta: meta ?? {},
 });
 
 export const findMock =
@@ -28,7 +32,7 @@ export const makeListMock =
   <T extends BaseMockData>(mock: T[]) =>
   async (): Promise<ServiceResponse<T[]>> => {
     await sleep(500);
-    return makeMockServiceResponse(mock);
+    return makeMockServiceResponse(mock, { total: mock.length });
   };
 
 export const makeCreateMock =

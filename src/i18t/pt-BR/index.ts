@@ -35,4 +35,5 @@ export const ptBrTranslations: { [k: string]: string } = {
   Actions: "Ações",
   Loading: "Carregando",
   "Unable to load data": "Não foi possível carregar as informações",
+  "Clear search": "Limpar busca",
 };
