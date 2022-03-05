@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import { IconButton, ThemeProvider } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
@@ -15,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
-import DebouncedTableSearch from "@/components/Table/DebouncedTableSearch";
+import { clone } from "lodash";
 
 const columns: DataTableColumn[] = [
   {
@@ -70,7 +69,7 @@ const columns: DataTableColumn[] = [
   },
 ];
 
-const initialSearchObject: SearchState = {
+const INITIAL_SEARCH_OBJECT: SearchState = {
   search: "",
   total: 0,
   page: 1,
@@ -79,19 +78,53 @@ const initialSearchObject: SearchState = {
   sort_dir: null,
 };
 
+const reducer = (
+  state: SearchState,
+  action: { [k: string]: any }
+): SearchState => {
+  switch (action.type) {
+    case "search":
+      return {
+        ...state,
+        search: action.search ?? "",
+        page: 1,
+      };
+    case "page":
+      return { ...state, page: action.page };
+    case "page_size":
+      return {
+        ...state,
+        page_size: action.page_size,
+      };
+    case "order":
+      return {
+        ...state,
+        sort_by: action.sort_by,
+        sort_dir: action.sort_dir ?? null,
+      };
+    case "reset":
+    default:
+      return clone(INITIAL_SEARCH_OBJECT);
+  }
+};
+
 const Table: React.FC = () => {
   const { t } = useTranslation();
   const snackbar = useSnackbar();
   const mounted = useRef(true);
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchObject, setSearchObject] =
-    useState<SearchState>(initialSearchObject);
+  const [searchObject, dispatchSearchObject] = useReducer(
+    reducer,
+    INITIAL_SEARCH_OBJECT
+  );
+  // const [searchObject, setSearchObject] =
+  //   useState<SearchState>(INITIAL_SEARCH_OBJECT);
 
   const getData = () => {
     setLoading(true);
     listCategories({
-      search: searchObject.search,
+      search: cleanSearchText(searchObject.search),
       page: searchObject.page,
       per_page: searchObject.page_size,
       sort: searchObject.sort_by,
@@ -100,7 +133,7 @@ const Table: React.FC = () => {
       .then(({ data, meta }) => {
         if (!mounted.current) return;
         setData(data);
-        setSearchObject((prevState) => ({ ...prevState, total: meta?.total }));
+        // setSearchObject((prevState) => ({ ...prevState, total: meta?.total }));
       })
       .catch((error) => {
         if (HttpResource.isCanceled(error)) return;
@@ -112,6 +145,14 @@ const Table: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const cleanSearchText = (text) => {
+    let newText = text;
+    if (text && text.value !== undefined) {
+      newText = text.value;
+    }
+    return newText;
   };
 
   useEffect(() => {
@@ -151,28 +192,21 @@ const Table: React.FC = () => {
           count: searchObject.total,
           customToolbar: () => (
             <FilterResetButton
-              handleClick={() => setSearchObject(initialSearchObject)}
+              handleClick={() => dispatchSearchObject({ type: "reset" })}
             />
           ),
           onSearchChange: (value) =>
-            setSearchObject((prevState) => ({
-              ...prevState,
-              search: value ?? "",
-              page: 1,
-            })),
+            dispatchSearchObject({ type: "search", search: value }),
           onChangePage: (page) =>
-            setSearchObject((prevState) => ({ ...prevState, page: page + 1 })),
+            dispatchSearchObject({ type: "page", page: page + 1 }),
           onChangeRowsPerPage: (pageSize) =>
-            setSearchObject((prevState) => ({
-              ...prevState,
-              page_size: pageSize,
-            })),
-          onColumnSortChange: (changedColumn, direction) =>
-            setSearchObject((prevState) => ({
-              ...prevState,
+            dispatchSearchObject({ type: "page_size", page_size: pageSize }),
+          onColumnSortChange: (changedColumn, sortDirection) =>
+            dispatchSearchObject({
+              type: "order",
               sort_by: changedColumn,
-              sort_dir: direction ?? null,
-            })),
+              sort_dir: sortDirection,
+            }),
         }}
       />
     </ThemeProvider>
