@@ -14,7 +14,7 @@ import { Category } from "@/util/models";
 import EditIcon from "@mui/icons-material/Edit";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
-import reducer, { INITIAL_STATE, Creators } from "@/store/search";
+import reducer, { INITIAL_STATE, Creators } from "@/store/filter";
 
 const columns: DataTableColumn[] = [
   {
@@ -76,21 +76,18 @@ const Table: React.FC = () => {
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [searchObject, dispatchSearchObject] = useReducer(
-    reducer,
-    INITIAL_STATE
-  );
+  const [filterState, dispatchFilterState] = useReducer(reducer, INITIAL_STATE);
   // const [searchObject, setSearchObject] =
   //   useState<SearchState>(INITIAL_SEARCH_OBJECT);
 
   const getData = () => {
     setLoading(true);
     listCategories({
-      search: cleanSearchText(searchObject.search),
-      page: searchObject.page,
-      per_page: searchObject.page_size,
-      sort: searchObject.sort_by,
-      dir: searchObject.sort_dir,
+      search: cleanSearchText(filterState.search),
+      page: filterState.page,
+      per_page: filterState.page_size,
+      sort: filterState.sort_by,
+      dir: filterState.sort_dir,
     })
       .then(({ data, meta }) => {
         if (!mounted.current) return;
@@ -133,11 +130,11 @@ const Table: React.FC = () => {
       mounted.current = false;
     };
   }, [
-    searchObject.search,
-    searchObject.page,
-    searchObject.page_size,
-    searchObject.sort_by,
-    searchObject.sort_dir,
+    filterState.search,
+    filterState.page,
+    filterState.page_size,
+    filterState.sort_by,
+    filterState.sort_dir,
   ]);
 
   return (
@@ -149,23 +146,23 @@ const Table: React.FC = () => {
         loading={loading}
         options={{
           serverSide: true,
-          searchText: searchObject.search as any,
-          page: searchObject.page,
-          rowsPerPage: searchObject.page_size,
+          searchText: filterState.search as any,
+          page: filterState.page,
+          rowsPerPage: filterState.page_size,
           count: totalRecords,
           customToolbar: () => (
             <FilterResetButton
-              handleClick={() => dispatchSearchObject(Creators.setReset())}
+              handleClick={() => dispatchFilterState(Creators.setReset())}
             />
           ),
           onSearchChange: (value) =>
-            dispatchSearchObject(Creators.setSearch({ search: value ?? "" })),
+            dispatchFilterState(Creators.setSearch({ search: value ?? "" })),
           onChangePage: (page) =>
-            dispatchSearchObject(Creators.setPage({ page: page + 1 })),
+            dispatchFilterState(Creators.setPage({ page: page + 1 })),
           onChangeRowsPerPage: (pageSize) =>
-            dispatchSearchObject(Creators.setPageSize({ page_size: pageSize })),
+            dispatchFilterState(Creators.setPageSize({ page_size: pageSize })),
           onColumnSortChange: (changedColumn, sortDirection) =>
-            dispatchSearchObject(
+            dispatchFilterState(
               Creators.setOrder({
                 sort_by: changedColumn,
                 sort_dir: sortDirection,

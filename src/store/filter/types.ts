@@ -11,13 +11,13 @@ export interface Sort {
   sort_dir: "asc" | "desc" | null;
 }
 
-export interface SearchState extends Pagination, Sort {
+export interface FilterState extends Pagination, Sort {
   search: string | null | { value: string | null; [k: string]: any };
 }
 
 export interface SetSearchAction extends AnyAction {
   payload: {
-    search: SearchState["search"];
+    search: FilterState["search"];
   };
 }
 
@@ -40,7 +40,7 @@ export interface SetOrderAction extends AnyAction {
   };
 }
 
-export type SearchActionUnion =
+export type FilterActionUnion =
   | SetSearchAction
   | SetPageAction
   | SetPageSizeAction

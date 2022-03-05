@@ -31,7 +31,7 @@ export const { Types, Creators } = createActions<
   setReset: [],
 });
 
-export const INITIAL_STATE: Typings.SearchState = {
+export const INITIAL_STATE: Typings.FilterState = {
   search: null,
   total: 0,
   page: 1,
@@ -41,8 +41,8 @@ export const INITIAL_STATE: Typings.SearchState = {
 };
 
 export const reducer = createReducer<
-  Typings.SearchState,
-  Typings.SearchActionUnion
+  Typings.FilterState,
+  Typings.FilterActionUnion
 >(INITIAL_STATE, {
   [Types.SET_SEARCH]: setSearch,
   [Types.SET_PAGE]: setPage,
@@ -56,7 +56,7 @@ export default reducer;
 function setSearch(
   state = INITIAL_STATE,
   action: Typings.SetSearchAction
-): Typings.SearchState {
+): Typings.FilterState {
   return {
     ...state,
     search: action.payload.search ?? "",
@@ -67,14 +67,14 @@ function setSearch(
 function setPage(
   state = INITIAL_STATE,
   action: Typings.SetPageAction
-): Typings.SearchState {
+): Typings.FilterState {
   return { ...state, page: action.page };
 }
 
 function setPageSize(
   state = INITIAL_STATE,
   action: Typings.SetPageSizeAction
-): Typings.SearchState {
+): Typings.FilterState {
   return {
     ...state,
     page_size: action.page_size,
@@ -84,7 +84,7 @@ function setPageSize(
 function setOrder(
   state = INITIAL_STATE,
   action: Typings.SetOrderAction
-): Typings.SearchState {
+): Typings.FilterState {
   return {
     ...state,
     sort_by: action.sort_by,
@@ -92,6 +92,6 @@ function setOrder(
   };
 }
 
-function setReset(state = INITIAL_STATE): Typings.SearchState {
+function setReset(state = INITIAL_STATE): Typings.FilterState {
   return { ...INITIAL_STATE, search: { value: null, update: true } };
 }
