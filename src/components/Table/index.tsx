@@ -7,6 +7,7 @@ import MUIDataTable, {
 import i18n from "i18next";
 import { cloneDeep, merge, omit } from "lodash";
 import { Theme, ThemeProvider, useTheme } from "@mui/material";
+import DebouncedTableSearch from "./DebouncedTableSearch";
 
 export interface DataTableColumn extends MUIDataTableColumn {
   width?: string;
@@ -52,6 +53,14 @@ const defaultMuiTableOptions: MUIDataTableOptions = {
       deleteAria: i18n.t("Delete selected columns"),
     },
   },
+  customSearchRender: (searchText, onSearch, onHide, options) => (
+    <DebouncedTableSearch
+      searchText={searchText}
+      onSearch={onSearch}
+      onHide={onHide}
+      options={options}
+    />
+  ),
 };
 
 interface AppTableProps extends MUIDataTableProps {

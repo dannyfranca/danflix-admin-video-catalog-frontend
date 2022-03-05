@@ -38,6 +38,7 @@
       "import/prefer-default-export": "off",
       "no-useless-constructor": "off",
       "no-shadow": "off",
+      "no-empty": "off",
       "no-param-reassign": "off",
       "no-promise-executor-return": "off",
       "no-unused-expressions": "off",

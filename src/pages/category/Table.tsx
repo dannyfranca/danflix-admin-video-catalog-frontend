@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { IconButton, ThemeProvider } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
-import type { PartialDeep } from "type-fest";
 
 import i18next from "@/i18t";
 import { formatDateFromIso } from "@/util/date";
@@ -16,6 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
+import DebouncedTableSearch from "@/components/Table/DebouncedTableSearch";
 
 const columns: DataTableColumn[] = [
   {
