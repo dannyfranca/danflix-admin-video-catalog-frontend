@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { IconButton, ThemeProvider } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -14,7 +14,11 @@ import { Category } from "@/util/models";
 import EditIcon from "@mui/icons-material/Edit";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
-import reducer, { INITIAL_STATE, Creators } from "@/store/filter";
+import { Creators } from "@/store/filter";
+import useFilter, { FilterManager } from "@/hooks/useFilter";
+
+const debounceTime = 300;
+const debounceSearchTime = 300;
 
 const columns: DataTableColumn[] = [
   {
@@ -75,15 +79,19 @@ const Table: React.FC = () => {
   const mounted = useRef(true);
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [filterState, dispatchFilterState] = useReducer(reducer, INITIAL_STATE);
-  // const [searchObject, setSearchObject] =
-  //   useState<SearchState>(INITIAL_SEARCH_OBJECT);
+  const {
+    dispatchFilterState,
+    filterState,
+    debouncedFilterState,
+    setTotalRecords,
+    totalRecords,
+    filterManager,
+  } = useFilter({ columns, debounceTime });
 
   const getData = () => {
     setLoading(true);
     listCategories({
-      search: cleanSearchText(filterState.search),
+      search: FilterManager.cleanSearchText(filterState.search),
       page: filterState.page,
       per_page: filterState.page_size,
       sort: filterState.sort_by,
@@ -93,7 +101,6 @@ const Table: React.FC = () => {
         if (!mounted.current) return;
         setData(data);
         setTotalRecords(meta?.total);
-        // setSearchObject((prevState) => ({ ...prevState, total: meta?.total }));
       })
       .catch((error) => {
         if (HttpResource.isCanceled(error)) return;
@@ -105,14 +112,6 @@ const Table: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  };
-
-  const cleanSearchText = (text) => {
-    let newText = text;
-    if (text && text.value !== undefined) {
-      newText = text.value;
-    }
-    return newText;
   };
 
   useEffect(() => {
@@ -130,11 +129,11 @@ const Table: React.FC = () => {
       mounted.current = false;
     };
   }, [
-    filterState.search,
-    filterState.page,
-    filterState.page_size,
-    filterState.sort_by,
-    filterState.sort_dir,
+    FilterManager.cleanSearchText(debouncedFilterState.search),
+    debouncedFilterState.page,
+    debouncedFilterState.page_size,
+    debouncedFilterState.sort_by,
+    debouncedFilterState.sort_dir,
   ]);
 
   return (
@@ -144,6 +143,7 @@ const Table: React.FC = () => {
         data={data}
         columns={columns}
         loading={loading}
+        debouncedSearchTime={debounceSearchTime}
         options={{
           serverSide: true,
           searchText: filterState.search as any,
@@ -155,19 +155,10 @@ const Table: React.FC = () => {
               handleClick={() => dispatchFilterState(Creators.setReset())}
             />
           ),
-          onSearchChange: (value) =>
-            dispatchFilterState(Creators.setSearch({ search: value ?? "" })),
-          onChangePage: (page) =>
-            dispatchFilterState(Creators.setPage({ page: page + 1 })),
-          onChangeRowsPerPage: (pageSize) =>
-            dispatchFilterState(Creators.setPageSize({ page_size: pageSize })),
-          onColumnSortChange: (changedColumn, sortDirection) =>
-            dispatchFilterState(
-              Creators.setOrder({
-                sort_by: changedColumn,
-                sort_dir: sortDirection,
-              })
-            ),
+          onSearchChange: filterManager.changeSearch,
+          onChangePage: filterManager.changePage,
+          onChangeRowsPerPage: filterManager.changePageSize,
+          onColumnSortChange: filterManager.changeOrder,
         }}
       />
     </ThemeProvider>
