@@ -146,7 +146,14 @@ const Table: React.FC = () => {
           searchText: filterState.search as any,
           page: filterState.page,
           rowsPerPage: filterState.page_size,
+          rowsPerPageOptions: filterManager.pageSizeOptions,
           count: totalRecords,
+          sortOrder: filterState.sort_by
+            ? {
+                name: filterState.sort_by,
+                direction: filterState.sort_dir ?? "asc",
+              }
+            : ({} as any),
           customToolbar: () => (
             <FilterResetButton
               handleClick={() => dispatchFilterState(Creators.setReset())}

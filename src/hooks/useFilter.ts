@@ -1,11 +1,13 @@
-import { Dispatch, useReducer, useState } from "react";
+import { Dispatch, useEffect, useReducer, useState } from "react";
 import { MUIDataTableColumn } from "mui-datatables";
 import { useDebounce } from "use-debounce";
 
-import reducer, { INITIAL_STATE, Creators } from "@/store/filter";
+import reducer, { Creators } from "@/store/filter";
 import { FilterActionUnion, FilterState } from "@/store/filter/types";
 import { useHistory } from "react-router-dom";
 import { isEqual } from "lodash";
+import { ObjectSchema } from "@/util/vendor/yup";
+import { createUrlFilterParamsSchema } from "@/util/vendor/yup-schemas";
 
 type History = ReturnType<typeof useHistory>;
 
@@ -18,24 +20,31 @@ interface UseFilterOptions {
 
 interface FilterManagerOptions extends Omit<UseFilterOptions, "debounceTime"> {
   history: History;
-  state: FilterState;
-  dispatch: Dispatch<FilterActionUnion>;
+  state?: FilterState;
+  dispatch?: Dispatch<FilterActionUnion>;
 }
 
 export default function useFilter(options: UseFilterOptions) {
   const history = useHistory();
-  const [filterState, dispatchFilterState] = useReducer(reducer, INITIAL_STATE);
   const filterManager = new FilterManager({
     ...options,
-    state: filterState,
-    dispatch: dispatchFilterState,
     history,
   });
+
+  const INITIAL_STATE = filterManager.getStateFromURL();
+  const [filterState, dispatchFilterState] = useReducer(reducer, INITIAL_STATE);
+  filterManager.dispatch = dispatchFilterState;
+  filterManager.state = filterState;
+
   const [debouncedFilterState] = useDebounce(
     filterState,
-    options.debounceTime ?? 500
+    options.debounceTime ?? 300
   );
   const [totalRecords, setTotalRecords] = useState(0);
+
+  useEffect(() => {
+    filterManager.replaceHistory();
+  }, []);
 
   return {
     dispatchFilterState,
@@ -48,16 +57,12 @@ export default function useFilter(options: UseFilterOptions) {
 }
 
 export class FilterManager {
-  state: FilterState;
-
-  dispatch: Dispatch<FilterActionUnion>;
-
+  schema: ObjectSchema<any>;
+  state?: FilterState;
+  dispatch?: Dispatch<FilterActionUnion>;
   columns: MUIDataTableColumn[];
-
   pageSize = 10;
-
-  pageSizeOptions = [10, 25, 50];
-
+  pageSizeOptions = [10, 25, 50, 100];
   history: History;
 
   constructor(options: FilterManagerOptions) {
@@ -65,32 +70,44 @@ export class FilterManager {
       options;
     this.columns = columns;
     this.history = history;
-    this.state = state;
-    this.dispatch = dispatch;
-    this.history = history;
+    this.state = state ?? this.state;
+    this.dispatch = dispatch ?? this.dispatch;
     this.pageSize = pageSize ?? this.pageSize;
     this.pageSizeOptions = pageSizeOptions ?? this.pageSizeOptions;
+    this.schema = createUrlFilterParamsSchema({
+      columns,
+      pageSize,
+      pageSizeOptions,
+    });
   }
 
   changeSearch(value: string | null) {
-    this.dispatch(Creators.setSearch({ search: value ?? "" }));
+    this.dispatch?.(Creators.setSearch({ search: value ?? "" }));
   }
 
   changePage(page: number) {
-    this.dispatch(Creators.setPage({ page: page + 1 }));
+    this.dispatch?.(Creators.setPage({ page: page + 1 }));
   }
 
   changePageSize(pageSize: number) {
-    this.dispatch(Creators.setPageSize({ page_size: pageSize }));
+    this.dispatch?.(Creators.setPageSize({ page_size: pageSize }));
   }
 
   changeOrder(changedColumn: string, sortDirection: "asc" | "desc" | null) {
-    this.dispatch(
+    this.dispatch?.(
       Creators.setOrder({
         sort_by: changedColumn,
         sort_dir: sortDirection,
       })
     );
+  }
+
+  replaceHistory() {
+    this.history.replace({
+      pathname: this.history.location.pathname,
+      search: `?${new URLSearchParams(this.formatSearchParams() as any)}`,
+      state: this.state,
+    });
   }
 
   pushHistory() {
@@ -103,9 +120,22 @@ export class FilterManager {
       search: `?${new URLSearchParams(this.formatSearchParams() as any)}`,
       state: {
         ...nextState,
-        search: FilterManager.cleanSearchText(nextState.search),
+        search: FilterManager.cleanSearchText(nextState?.search),
       },
     });
+  }
+
+  getStateFromURL() {
+    const queryParams = new URLSearchParams(
+      this.history.location.search.substring(1)
+    );
+    return this.schema.cast({
+      search: queryParams.get("search"),
+      page: queryParams.get("page"),
+      page_size: queryParams.get("page_size"),
+      sort_by: queryParams.get("sort_by"),
+      sort_dir: queryParams.get("sort_dir"),
+    }) as FilterState;
   }
 
   private formatSearchParams(): FilterState {
