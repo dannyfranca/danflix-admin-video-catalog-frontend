@@ -5,6 +5,7 @@ import { useDebounce } from "use-debounce";
 import reducer, { INITIAL_STATE, Creators } from "@/store/filter";
 import { FilterActionUnion, FilterState } from "@/store/filter/types";
 import { useHistory } from "react-router-dom";
+import { isEqual } from "lodash";
 
 type History = ReturnType<typeof useHistory>;
 
@@ -93,12 +94,16 @@ export class FilterManager {
   }
 
   pushHistory() {
+    const oldState = this.history.location.state;
+    const nextState = this.state;
+    if (isEqual(oldState, nextState)) return;
+
     this.history.push({
       pathname: this.history.location.pathname,
       search: `?${new URLSearchParams(this.formatSearchParams() as any)}`,
       state: {
-        ...this.state,
-        search: FilterManager.cleanSearchText(this.state?.search),
+        ...nextState,
+        search: FilterManager.cleanSearchText(nextState.search),
       },
     });
   }
