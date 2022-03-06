@@ -1,5 +1,3 @@
-import { AnyAction } from "redux";
-
 export interface Pagination {
   page: number;
   page_size: number;
@@ -15,30 +13,27 @@ export interface FilterState extends Pagination, Sort {
   search: string | null | { value: string | null; [k: string]: any };
 }
 
-export interface SetSearchAction extends AnyAction {
-  payload: {
-    search: FilterState["search"];
-  };
+export interface BaseAction<A = any, T = string> {
+  type: T;
+  payload: A;
 }
 
-export interface SetPageAction extends AnyAction {
-  payload: {
-    page: number;
-  };
-}
+export type SetSearchAction = BaseAction<{
+  search: FilterState["search"];
+}>;
 
-export interface SetPageSizeAction extends AnyAction {
-  payload: {
-    page_size: number;
-  };
-}
+export type SetPageAction = BaseAction<{
+  page: number;
+}>;
 
-export interface SetOrderAction extends AnyAction {
-  payload: {
-    sort_by: string;
-    sort_dir: "asc" | "desc" | null;
-  };
-}
+export type SetPageSizeAction = BaseAction<{
+  page_size: number;
+}>;
+
+export type SetOrderAction = BaseAction<{
+  sort_by: string;
+  sort_dir: "asc" | "desc" | null;
+}>;
 
 export type FilterActionUnion =
   | SetSearchAction
