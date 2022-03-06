@@ -36,7 +36,7 @@ export interface SetPageSizeAction extends AnyAction {
 export interface SetOrderAction extends AnyAction {
   payload: {
     sort_by: string;
-    sort_dir: string;
+    sort_dir: "asc" | "desc" | null;
   };
 }
 

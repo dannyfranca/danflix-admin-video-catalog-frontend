@@ -48,7 +48,7 @@ export const reducer = createReducer<
   [Types.SET_PAGE]: setPage,
   [Types.SET_PAGE_SIZE]: setPageSize,
   [Types.SET_ORDER]: setOrder,
-  [Types.SET_RESET]: setOrder,
+  [Types.SET_RESET]: setReset,
 });
 
 export default reducer;
@@ -68,7 +68,7 @@ function setPage(
   state = INITIAL_STATE,
   action: Typings.SetPageAction
 ): Typings.FilterState {
-  return { ...state, page: action.page };
+  return { ...state, page: action.payload.page };
 }
 
 function setPageSize(
@@ -77,7 +77,7 @@ function setPageSize(
 ): Typings.FilterState {
   return {
     ...state,
-    page_size: action.page_size,
+    page_size: action.payload.page_size,
   };
 }
 
@@ -87,8 +87,8 @@ function setOrder(
 ): Typings.FilterState {
   return {
     ...state,
-    sort_by: action.sort_by,
-    sort_dir: action.sort_dir ?? null,
+    sort_by: action.payload.sort_by,
+    sort_dir: action.payload.sort_dir ?? null,
   };
 }
 

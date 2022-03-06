@@ -124,6 +124,7 @@ const Table: React.FC = () => {
 
   useEffect(() => {
     mounted.current = true;
+    filterManager.pushHistory();
     getData();
     return () => {
       mounted.current = false;
@@ -155,10 +156,12 @@ const Table: React.FC = () => {
               handleClick={() => dispatchFilterState(Creators.setReset())}
             />
           ),
-          onSearchChange: filterManager.changeSearch,
-          onChangePage: filterManager.changePage,
-          onChangeRowsPerPage: filterManager.changePageSize,
-          onColumnSortChange: filterManager.changeOrder,
+          onSearchChange: (value) => filterManager.changeSearch(value),
+          onChangePage: (page) => filterManager.changePage(page),
+          onChangeRowsPerPage: (pageSize) =>
+            filterManager.changePageSize(pageSize),
+          onColumnSortChange: (changedColumn, sortDirection) =>
+            filterManager.changeOrder(changedColumn, sortDirection),
         }}
       />
     </ThemeProvider>
