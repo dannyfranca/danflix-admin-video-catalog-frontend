@@ -40,6 +40,7 @@ const DebouncedTableSearch: React.FC<TableSearchProps> = ({
   searchText,
   onSearch,
   onHide,
+  debouncedTime = 300,
 }) => {
   const { classes } = useStyles();
   const [state, setState] = useState({ text: searchText });
