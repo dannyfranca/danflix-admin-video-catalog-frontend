@@ -45,6 +45,7 @@
       "no-return-assign": "off",
       "no-use-before-define": "off",
       "default-param-last": "off",
+      "lines-between-class-members": "off",
       "import/no-extraneous-dependencies": "off"
     },
     "settings": {

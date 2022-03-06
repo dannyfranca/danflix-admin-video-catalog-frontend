@@ -17,9 +17,6 @@ import FilterResetButton from "@/components/Table/FilterResetButton";
 import { Creators } from "@/store/filter";
 import useFilter, { FilterManager } from "@/hooks/useFilter";
 
-const debounceTime = 300;
-const debounceSearchTime = 300;
-
 const columns: DataTableColumn[] = [
   {
     name: "id",
@@ -86,7 +83,7 @@ const Table: React.FC = () => {
     setTotalRecords,
     totalRecords,
     filterManager,
-  } = useFilter({ columns, debounceTime });
+  } = useFilter({ columns });
 
   const getData = () => {
     setLoading(true);
@@ -144,7 +141,6 @@ const Table: React.FC = () => {
         data={data}
         columns={columns}
         loading={loading}
-        debouncedSearchTime={debounceSearchTime}
         options={{
           serverSide: true,
           searchText: filterState.search as any,
