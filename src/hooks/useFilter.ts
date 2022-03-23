@@ -76,6 +76,7 @@ export class FilterManager {
   schema: ObjectSchema<any>;
   state?: FilterState;
   dispatch?: Dispatch<FilterActionUnion>;
+  tableRef: MutableRefObject<MuiDataTableRefComponent>;
   columns: MUIDataTableColumn[];
   pageSize = 10;
   pageSizeOptions = [10, 25, 50, 100];
@@ -89,11 +90,13 @@ export class FilterManager {
       pageSize,
       pageSizeOptions,
       state,
+      tableRef,
       dispatch,
       extraFilter,
     } = options;
     this.columns = columns;
     this.history = history;
+    this.tableRef = tableRef;
     this.state = state ?? this.state;
     this.dispatch = dispatch ?? this.dispatch;
     this.pageSize = pageSize ?? this.pageSize;
@@ -111,25 +114,48 @@ export class FilterManager {
     );
   }
 
+  private resetTablePagination() {
+    this.tableRef.current.changeRowsPerPage(this.pageSize);
+    this.tableRef.current.changePage(0);
+  }
+
   changeSearch(value: string | null) {
-    this.dispatch?.(Creators.setSearch({ search: value ?? "" }));
+    this.dispatch!(Creators.setSearch({ search: value ?? "" }));
   }
 
   changePage(page: number) {
-    this.dispatch?.(Creators.setPage({ page: page + 1 }));
+    this.dispatch!(Creators.setPage({ page: page + 1 }));
   }
 
   changePageSize(pageSize: number) {
-    this.dispatch?.(Creators.setPageSize({ page_size: pageSize }));
+    this.dispatch!(Creators.setPageSize({ page_size: pageSize }));
   }
 
   changeOrder(changedColumn: string, sortDirection: "asc" | "desc" | null) {
-    this.dispatch?.(
+    this.dispatch!(
       Creators.setOrder({
         sort_by: changedColumn,
         sort_dir: sortDirection,
       })
     );
+    this.resetTablePagination();
+  }
+
+  changeExtraFilter(data) {
+    this.dispatch!(Creators.updateExtraFilter(data));
+  }
+
+  resetFilter() {
+    const INITIAL_STATE = {
+      ...this.schema.cast({}),
+      search: { value: null, update: true },
+    };
+    this.dispatch!(
+      Creators.setReset({
+        state: INITIAL_STATE as any,
+      })
+    );
+    this.resetTablePagination();
   }
 
   replaceHistory() {
