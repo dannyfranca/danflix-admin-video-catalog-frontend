@@ -17,7 +17,6 @@ import { Category } from "@/util/models";
 import EditIcon from "@mui/icons-material/Edit";
 import HttpResource from "@/util/http/http-resource";
 import FilterResetButton from "@/components/Table/FilterResetButton";
-import { Creators } from "@/store/filter";
 import useFilter, { FilterManager } from "@/hooks/useFilter";
 
 const columns: DataTableColumn[] = [
@@ -91,7 +90,6 @@ const Table: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
   const {
-    dispatchFilterState,
     filterState,
     debouncedFilterState,
     setTotalRecords,
@@ -171,7 +169,7 @@ const Table: React.FC = () => {
             : ({} as any),
           customToolbar: () => (
             <FilterResetButton
-              handleClick={() => dispatchFilterState(Creators.setReset())}
+              handleClick={() => filterManager.resetFilter()}
             />
           ),
           onSearchChange: (value) => filterManager.changeSearch(value),

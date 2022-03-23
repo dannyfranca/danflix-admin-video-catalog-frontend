@@ -40,9 +40,14 @@ export type UpdateExtraFilterAction = BaseAction<{
   [key: string]: any;
 }>;
 
+export type SetResetAction = BaseAction<{
+  state: FilterState;
+}>;
+
 export type FilterActionUnion =
   | SetSearchAction
   | SetPageAction
   | SetPageSizeAction
   | SetOrderAction
-  | UpdateExtraFilterAction;
+  | UpdateExtraFilterAction
+  | SetResetAction;

@@ -22,7 +22,9 @@ export const { Types, Creators } = createActions<
     setOrder(
       payload: Typings.SetOrderAction["payload"]
     ): Typings.SetOrderAction;
-    setReset(): Typings.SetOrderAction;
+    setReset(
+      payload: Typings.SetResetAction["payload"]
+    ): Typings.SetResetAction;
     updateExtraFilter(
       payload: Typings.UpdateExtraFilterAction["payload"]
     ): Typings.UpdateExtraFilterAction;
@@ -32,7 +34,7 @@ export const { Types, Creators } = createActions<
   setPage: ["payload"],
   setPageSize: ["payload"],
   setOrder: ["payload"],
-  setReset: [],
+  setReset: ["payload"],
   updateExtraFilter: ["payload"],
 });
 
@@ -99,8 +101,11 @@ function setOrder(
   };
 }
 
-function setReset(state = INITIAL_STATE): Typings.FilterState {
-  return { ...INITIAL_STATE, search: { value: null, update: true } };
+function setReset(
+  state = INITIAL_STATE,
+  action: Typings.SetResetAction
+): Typings.FilterState {
+  return action.payload.state;
 }
 
 function updateExtraFilter(
