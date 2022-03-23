@@ -11,6 +11,8 @@ export const enTranslations: { [k: string]: string } = {
   "Created at": "Created at",
   Save: "Save",
   "Save and continue editing": "Save and continue editing",
+  Yes: "Yes",
+  No: "No",
   // CATEGORY
   "Category saved with success": "Category saved with success",
   // DATA TABLE

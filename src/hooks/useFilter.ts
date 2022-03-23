@@ -1,13 +1,21 @@
-import { Dispatch, useEffect, useReducer, useState } from "react";
+import {
+  Dispatch,
+  useEffect,
+  useReducer,
+  useState,
+  MutableRefObject,
+  useMemo,
+} from "react";
 import { MUIDataTableColumn } from "mui-datatables";
 import { useDebounce } from "use-debounce";
+import { useHistory } from "react-router-dom";
+import { isEqual } from "lodash";
 
 import reducer, { Creators } from "@/store/filter";
 import { FilterActionUnion, FilterState } from "@/store/filter/types";
-import { useHistory } from "react-router-dom";
-import { isEqual } from "lodash";
 import { ObjectSchema } from "@/util/vendor/yup";
 import { createUrlFilterParamsSchema } from "@/util/vendor/yup-schemas";
+import { MuiDataTableRefComponent } from "../components/Table";
 
 type History = ReturnType<typeof useHistory>;
 
@@ -16,12 +24,20 @@ interface UseFilterOptions {
   pageSize?: number;
   pageSizeOptions?: number[];
   debounceTime?: number;
+  tableRef: MutableRefObject<MuiDataTableRefComponent>;
+  extraFilter?: ExtraFilter;
 }
 
 interface FilterManagerOptions extends Omit<UseFilterOptions, "debounceTime"> {
   history: History;
   state?: FilterState;
   dispatch?: Dispatch<FilterActionUnion>;
+}
+
+export interface ExtraFilter {
+  getStateFromURL: (queryParams: URLSearchParams) => any;
+  formatSearchParams: (debouncedState: FilterState) => any;
+  createValidationSchema: () => any;
 }
 
 export default function useFilter(options: UseFilterOptions) {
@@ -64,21 +80,35 @@ export class FilterManager {
   pageSize = 10;
   pageSizeOptions = [10, 25, 50, 100];
   history: History;
+  extraFilter?: ExtraFilter;
 
   constructor(options: FilterManagerOptions) {
-    const { columns, history, pageSize, pageSizeOptions, state, dispatch } =
-      options;
+    const {
+      columns,
+      history,
+      pageSize,
+      pageSizeOptions,
+      state,
+      dispatch,
+      extraFilter,
+    } = options;
     this.columns = columns;
     this.history = history;
     this.state = state ?? this.state;
     this.dispatch = dispatch ?? this.dispatch;
     this.pageSize = pageSize ?? this.pageSize;
     this.pageSizeOptions = pageSizeOptions ?? this.pageSizeOptions;
-    this.schema = createUrlFilterParamsSchema({
-      columns,
-      pageSize,
-      pageSizeOptions,
-    });
+    this.extraFilter = extraFilter;
+    this.schema = useMemo(
+      () =>
+        createUrlFilterParamsSchema({
+          columns,
+          pageSize,
+          pageSizeOptions,
+          extraFilter,
+        }),
+      [this.pageSizeOptions, this.pageSize, this.columns, this.extraFilter]
+    );
   }
 
   changeSearch(value: string | null) {
@@ -135,6 +165,9 @@ export class FilterManager {
       page_size: queryParams.get("page_size"),
       sort_by: queryParams.get("sort_by"),
       sort_dir: queryParams.get("sort_dir"),
+      ...(this.extraFilter && {
+        extraFilter: this.extraFilter.getStateFromURL(queryParams),
+      }),
     }) as FilterState;
   }
 
@@ -149,6 +182,9 @@ export class FilterManager {
           sort_by: this.state?.sort_by,
           sort_dir: this.state.sort_dir,
         }),
+      ...(this.extraFilter && {
+        extraFilter: this.extraFilter.formatSearchParams(this.state!),
+      }),
     };
   }
 

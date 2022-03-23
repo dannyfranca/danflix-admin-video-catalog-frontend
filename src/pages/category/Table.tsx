@@ -9,7 +9,10 @@ import { formatDateFromIso } from "@/util/date";
 import { listCategories } from "@/services/categories";
 import { Circle } from "@/components/Circle";
 import { dataTableTheme } from "@/config/data-table-theme";
-import DataTable, { DataTableColumn } from "@/components/Table";
+import DataTable, {
+  DataTableColumn,
+  MuiDataTableRefComponent,
+} from "@/components/Table";
 import { Category } from "@/util/models";
 import EditIcon from "@mui/icons-material/Edit";
 import HttpResource from "@/util/http/http-resource";
@@ -24,18 +27,25 @@ const columns: DataTableColumn[] = [
     width: "30%",
     options: {
       sort: false,
+      filter: false,
     },
   },
   {
     name: "name",
     label: i18next.t("Name"),
     width: "35%",
+    options: {
+      filter: false,
+    },
   },
   {
     name: "is_active",
     label: i18next.t("Active"),
     width: "4%",
     options: {
+      filterOptions: {
+        names: [i18next.t("Yes"), i18next.t("No")],
+      },
       customBodyRender(value) {
         return <Circle color={value ? "success" : "error"} />;
       },
@@ -46,6 +56,7 @@ const columns: DataTableColumn[] = [
     label: i18next.t("Created at"),
     width: "14%",
     options: {
+      filter: false,
       customBodyRender(value) {
         return <span>{formatDateFromIso(value)}</span>;
       },
@@ -55,6 +66,8 @@ const columns: DataTableColumn[] = [
     name: "actions",
     label: i18next.t("Actions"),
     options: {
+      sort: false,
+      filter: false,
       customBodyRender: (value, tableMeta) => {
         return (
           <IconButton
@@ -76,6 +89,7 @@ const Table: React.FC = () => {
   const mounted = useRef(true);
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
+  const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
   const {
     dispatchFilterState,
     filterState,
@@ -83,7 +97,7 @@ const Table: React.FC = () => {
     setTotalRecords,
     totalRecords,
     filterManager,
-  } = useFilter({ columns });
+  } = useFilter({ columns, tableRef });
 
   const getData = () => {
     setLoading(true);
@@ -141,6 +155,7 @@ const Table: React.FC = () => {
         data={data}
         columns={columns}
         loading={loading}
+        ref={tableRef}
         options={{
           serverSide: true,
           searchText: filterState.search as any,

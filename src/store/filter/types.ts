@@ -11,6 +11,7 @@ export interface Sort {
 
 export interface FilterState extends Pagination, Sort {
   search: string | null | { value: string | null; [k: string]: any };
+  extraFilter?: { [key: string]: any };
 }
 
 export interface BaseAction<A = any, T = string> {
@@ -35,8 +36,13 @@ export type SetOrderAction = BaseAction<{
   sort_dir: "asc" | "desc" | null;
 }>;
 
+export type UpdateExtraFilterAction = BaseAction<{
+  [key: string]: any;
+}>;
+
 export type FilterActionUnion =
   | SetSearchAction
   | SetPageAction
   | SetPageSizeAction
-  | SetOrderAction;
+  | SetOrderAction
+  | UpdateExtraFilterAction;

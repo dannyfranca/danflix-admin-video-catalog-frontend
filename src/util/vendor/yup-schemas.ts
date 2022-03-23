@@ -1,3 +1,4 @@
+import type { ExtraFilter } from "@/hooks/useFilter";
 import * as yup from "./yup";
 
 interface UrlFilterParamsOptions {
@@ -9,12 +10,14 @@ interface UrlFilterParamsOptions {
   }[];
   pageSize?: number;
   pageSizeOptions?: number[];
+  extraFilter?: ExtraFilter;
 }
 
 export const createUrlFilterParamsSchema = ({
   columns,
   pageSize = 10,
   pageSizeOptions,
+  extraFilter,
 }: UrlFilterParamsOptions) =>
   yup.object().shape({
     search: yup
@@ -54,4 +57,5 @@ export const createUrlFilterParamsSchema = ({
           : value
       )
       .default(null),
+    ...(extraFilter && { extraFilters: extraFilter.createValidationSchema() }),
   });

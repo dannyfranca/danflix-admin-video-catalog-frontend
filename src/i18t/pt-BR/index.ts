@@ -11,6 +11,8 @@ export const ptBrTranslations: { [k: string]: string } = {
   "Created at": "Criado em",
   Save: "Salvar",
   "Save and continue editing": "Salvar e continuar editando",
+  Yes: "Sim",
+  No: "Não",
   // CATEGORY
   "Category saved with success": "Categoria salva com sucesso",
   // DATA TABLE

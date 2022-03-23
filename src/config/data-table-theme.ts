@@ -1,4 +1,4 @@
-import { createTheme, SimplePaletteColorOptions } from "@mui/material";
+import { createTheme } from "@mui/material";
 
 import { theme } from "./theme";
 
@@ -41,6 +41,20 @@ export const dataTableTheme = createTheme({
           " div,span,path": {
             color: "#ffffff",
           },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          marginBottom: "16px !important",
+        },
+      },
+    },
+    MuiPopover: {
+      styleOverrides: {
+        paper: {
+          minWidth: "300px !important",
         },
       },
     },

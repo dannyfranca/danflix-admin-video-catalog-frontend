@@ -9,6 +9,7 @@ export const { Types, Creators } = createActions<
     SET_PAGE_SIZE: string;
     SET_ORDER: string;
     SET_RESET: string;
+    UPDATE_EXTRA_FILTER: string;
   },
   {
     setSearch(
@@ -22,6 +23,9 @@ export const { Types, Creators } = createActions<
       payload: Typings.SetOrderAction["payload"]
     ): Typings.SetOrderAction;
     setReset(): Typings.SetOrderAction;
+    updateExtraFilter(
+      payload: Typings.UpdateExtraFilterAction["payload"]
+    ): Typings.UpdateExtraFilterAction;
   }
 >({
   setSearch: ["payload"],
@@ -29,6 +33,7 @@ export const { Types, Creators } = createActions<
   setPageSize: ["payload"],
   setOrder: ["payload"],
   setReset: [],
+  updateExtraFilter: ["payload"],
 });
 
 export const INITIAL_STATE: Typings.FilterState = {
@@ -38,6 +43,7 @@ export const INITIAL_STATE: Typings.FilterState = {
   page_size: 10,
   sort_by: null,
   sort_dir: null,
+  extraFilter: {},
 };
 
 export const reducer = createReducer<
@@ -49,6 +55,7 @@ export const reducer = createReducer<
   [Types.SET_PAGE_SIZE]: setPageSize,
   [Types.SET_ORDER]: setOrder,
   [Types.SET_RESET]: setReset,
+  [Types.UPDATE_EXTRA_FILTER]: updateExtraFilter,
 });
 
 export default reducer;
@@ -94,4 +101,17 @@ function setOrder(
 
 function setReset(state = INITIAL_STATE): Typings.FilterState {
   return { ...INITIAL_STATE, search: { value: null, update: true } };
+}
+
+function updateExtraFilter(
+  state = INITIAL_STATE,
+  action: Typings.UpdateExtraFilterAction
+): Typings.FilterState {
+  return {
+    ...state,
+    extraFilter: {
+      ...state.extraFilter,
+      ...action.payload,
+    },
+  };
 }

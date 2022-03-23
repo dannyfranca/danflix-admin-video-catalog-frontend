@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { forwardRef } from "react";
 import MUIDataTable, {
   MUIDataTableOptions,
   MUIDataTableProps,
@@ -6,11 +6,25 @@ import MUIDataTable, {
 } from "mui-datatables";
 import i18n from "i18next";
 import { cloneDeep, merge, omit } from "lodash";
-import { Theme, ThemeProvider, useTheme } from "@mui/material";
+import { Theme, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
+
 import DebouncedTableSearch from "./DebouncedTableSearch";
 
 export interface DataTableColumn extends MUIDataTableColumn {
   width?: string;
+}
+
+export interface MuiDataTableRefComponent {
+  changePage: (page: number) => void;
+  changeRowsPerPage: (rowsPerPage: number) => void;
+}
+
+export interface AppTableProps
+  extends MUIDataTableProps,
+    React.RefAttributes<MuiDataTableRefComponent> {
+  columns: DataTableColumn[];
+  loading?: boolean;
+  debouncedSearchTime?: number;
 }
 
 const makeDefaultMuiTableOptions: (
@@ -66,63 +80,66 @@ const makeDefaultMuiTableOptions: (
   ),
 });
 
-interface AppTableProps extends MUIDataTableProps {
-  columns: DataTableColumn[];
-  loading?: boolean;
-  debouncedSearchTime?: number;
-}
+const DataTable = forwardRef<MuiDataTableRefComponent, AppTableProps>(
+  (props, ref) => {
+    const theme = cloneDeep<Theme>(useTheme());
+    const isSmOrDown = useMediaQuery(theme.breakpoints.down("sm"));
+    const defaultOptions = makeDefaultMuiTableOptions(
+      props.debouncedSearchTime
+    );
 
-const DataTable: React.FunctionComponent<AppTableProps> = (props) => {
-  const theme = cloneDeep<Theme>(useTheme());
+    const extractMuiDataTableColumns = (
+      columns: DataTableColumn[]
+    ): MUIDataTableColumn[] => {
+      setColumnWidth(columns);
+      return columns.map((c) => omit(c, "width"));
+    };
 
-  const setColumnWidth = (columns: DataTableColumn[]) => {
-    columns.forEach((c, k) => {
-      if (c.width && theme.components?.MuiTableCell?.styleOverrides?.head)
-        theme.components.MuiTableCell.styleOverrides.head[
-          `&:nth-of-type(${k + 2})`
-        ] = {
-          width: c.width,
-        };
+    const setColumnWidth = (columns: DataTableColumn[]) => {
+      columns.forEach((c, k) => {
+        if (c.width && theme.components?.MuiTableCell?.styleOverrides?.head)
+          theme.components.MuiTableCell.styleOverrides.head[
+            `&:nth-of-type(${k + 2})`
+          ] = {
+            width: c.width,
+          };
+      });
+    };
+
+    const applyLoading = () => {
+      const textLabels = newProps.options?.textLabels;
+      if (!textLabels?.body) return;
+      textLabels.body.noMatch =
+        newProps.loading === true
+          ? `${i18n.t("Loading")}...`
+          : textLabels.body.noMatch;
+    };
+
+    const getOriginalMuiDataTableProps = () => {
+      return {
+        ...omit(newProps, "loading"),
+        ref,
+      };
+    };
+
+    const newProps = merge<
+      Partial<MUIDataTableProps>,
+      AppTableProps,
+      Partial<MUIDataTableProps>
+    >({ options: cloneDeep(defaultOptions) }, props, {
+      columns: extractMuiDataTableColumns(props.columns),
     });
-  };
 
-  const extractMuiDataTableColumns = (
-    columns: DataTableColumn[]
-  ): MUIDataTableColumn[] => {
-    setColumnWidth(columns);
-    return columns.map((c) => omit(c, "width"));
-  };
+    applyLoading();
 
-  const applyLoading = () => {
-    const textLabels = newProps.options?.textLabels;
-    if (!textLabels?.body) return;
-    textLabels.body.noMatch =
-      newProps.loading === true
-        ? `${i18n.t("Loading")}...`
-        : textLabels.body.noMatch;
-  };
+    const originalProps = getOriginalMuiDataTableProps();
 
-  const getOriginalMuiDataTableProps = () => {
-    return omit(newProps, "isLoading");
-  };
-
-  const newProps = merge<
-    Partial<MUIDataTableProps>,
-    AppTableProps,
-    Partial<MUIDataTableProps>
-  >({ options: makeDefaultMuiTableOptions(props.debouncedSearchTime) }, props, {
-    columns: extractMuiDataTableColumns(props.columns),
-  });
-
-  applyLoading();
-
-  const originalProps = getOriginalMuiDataTableProps();
-
-  return (
-    <ThemeProvider theme={theme}>
-      <MUIDataTable {...originalProps} />
-    </ThemeProvider>
-  );
-};
+    return (
+      <ThemeProvider theme={theme}>
+        <MUIDataTable {...originalProps} />
+      </ThemeProvider>
+    );
+  }
+);
 
 export default DataTable;
